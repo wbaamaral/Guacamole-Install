@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Name: branding
+Specification-Title: Itiligent Custom CSS
+Specification-Version: 1.0
+Implementation-Title: Itiligent Custom CSS
+Implementation-Version: 1.0
+
+
