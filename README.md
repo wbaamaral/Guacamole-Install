@@ -7,7 +7,7 @@ Um script de construção e instalação de origem baseado em menu para Guacamol
 Para construir o dispositivo Guacamole, cole o link abaixo em um terminal e siga as instruções **(não execute como sudo)**:
 
 ```
-wget https://raw.githubusercontent.com/itiligent/Guacamole-Install/main/1-setup.sh && chmod +x 1-setup.sh && ./1-setup.sh
+wget https://raw.githubusercontent.com/wbaamaral/Guacamole-Install/main/1-setup.sh && chmod +x 1-setup.sh && ./1-setup.sh
 ```
 
 ## **Pré-requisitos**
