@@ -1,97 +1,97 @@
-# **Guacamole 1.5.3 VDI / Jump Server Appliance Build Script**
+# **Guacamole 1.5.3 VDI/Jump Server Appliance Build Script**
 
-A menu based source build & install script for Guacamole 1.5.3 with optional TLS reverse proxy, AD integration, multi-factor authentication, further security hardening and dark mode support.
+Um script de construção e instalação de origem baseado em menu para Guacamole 1.5.3 com proxy reverso TLS opcional, integração AD, autenticação multifator, maior reforço de segurança e suporte ao modo escuro.
 
-### **Automatic build, install & config script**
+### **Script automático de construção, instalação e configuração**
 
-To build the Guacamole appliance, paste the below link into a terminal and follow prompts **(do not run as sudo)**:
+Para construir o dispositivo Guacamole, cole o link abaixo em um terminal e siga as instruções **(não execute como sudo)**:
 
 ```
 wget https://raw.githubusercontent.com/itiligent/Guacamole-Install/main/1-setup.sh && chmod +x 1-setup.sh && ./1-setup.sh
 ```
 
-## **Prerequisites**
- ### NOTE: DEBIAN 12 & TOMCAT 10 NOT CURRENTLY COMPATIBLE - SEE ISSUE #10
+## **Pré-requisitos**
+### NOTA: DEBIAN 12 E TOMCAT 10 NÃO ATUALMENTE COMPATÍVEIS - VEJA A EDIÇÃO #10
 
-- **Ubuntu 18.04 - 22.x / Debian 11 & 10 / Raspbian Buster or Bullseye**
-  - *(if using OS vendor cloud images - you must use **stable releases of the above OS variants.**  Daily cloud image builds are akin to rolling releases and may contain as yet unsupported updates that break Guacamole!)*
-- Minimum 8GB RAM and 40GB HDD
-- Public or private DNS entries that match the default route interface IP address (required for TLS)
-- Incoming access on TCP ports 22, 80, and 443
-- Do not run as root. The user executing the installer script must instead be a **member of the sudo group**
+- **Ubuntu 18.04 - 22.x / Debian 11 e 10 / Raspbian Buster ou Bullseye**
+- *(se estiver usando imagens de nuvem de fornecedores de sistema operacional - você deve usar **versões estáveis das variantes de sistema operacional acima.** As compilações diárias de imagens de nuvem são semelhantes a versões contínuas e podem conter atualizações ainda não suportadas que quebram o Guacamole!)*
+- Mínimo de 8 GB de RAM e 40 GB de HDD
+- Entradas DNS públicas ou privadas que correspondem ao endereço IP da interface de rota padrão (obrigatório para TLS)
+- Acesso de entrada nas portas TCP 22, 80 e 443
+- Não execute como root. O usuário que executa o script do instalador deve ser um **membro do grupo sudo**
 
-## **Installer Menu Flow**
+## **Fluxo do menu do instalador**
 
-### **1. Confirm the system hostname & local dns domain suffix**
+### **1. Confirme o nome do host do sistema e o sufixo do domínio DNS local**
 
-### **2. Select a MySQL instance type and security baseline**
+### **2. Selecione um tipo de instância MySQL e uma linha de base de segurança**
 
-- Install a new local MySQL instance, or choose an existing/remote MySQL instance? 
-  - *Optionally add MySQL **mysql_secure_installation** settings to the selected MySQL instance*
-  - *Optionally provide an email address for backup messages and alerts*
+- Instalar uma nova instância local do MySQL ou escolher uma instância existente/remota do MySQL?
+- *Opcionalmente, adicione configurações do MySQL **mysql_secure_installation** à instância do MySQL selecionada*
+- *Opcionalmente, forneça um endereço de e-mail para mensagens de backup e alertas*
 
-### **3. Pick an authentication extension**
+### **3. Escolha uma extensão de autenticação**
 
-- DUO, TOTP, LDAP or none?  
+- DUO, TOTP, LDAP ou nenhum?
 
-### **4. Choose the Guacamole front end**
+### **4. Escolha a frente do Guacamole**
 
-- **Install Nginx reverse Proxy?** [y/n]
-     - No:  Keeps the Guacamole native front end & url http://server.local:8080/guacamole
-     - Yes: Prompts for a reverse proxy local dns name (this can be different to the hostname)
+- **Instalar proxy reverso Nginx?** [s/n]
+- Não: mantém o front-end e URL nativos do Guacamole http://server.local:8080/guacamole
+- Sim: solicita um nome DNS local do proxy reverso (pode ser diferente do nome do host)
    
-- **Install Nginx reverse proxy with a self-signed TLS certificate?** [y/n]
-  - No: Installs Nginx as **http** reverse proxy, Guacamole site set to http://server.local
-  - Yes: Installs Nginx as **https** reverse proxy, Guacamole site set to https://server.local 
-     - *Nginx is configured with a self signed TLS certificate and http redirect*
-     - *Windows & Linux self signed client browser certificates generated*
+- **Instalar proxy reverso Nginx com um certificado TLS autoassinado?** [s/n]
+- Não: instala o Nginx como proxy reverso **http**, site Guacamole definido como http://server.local
+- Sim: instala o Nginx como proxy reverso **https**, site Guacamole definido como https://server.local
+- *Nginx está configurado com um certificado TLS autoassinado e redirecionamento http*
+- *Certificados de navegador cliente autoassinados para Windows e Linux gerados*
 
- - **Install Nginx reverse proxy with a Let's Encrypt certificate?** [y/n] 
-    - Yes: Prompts for a webmaster email & public reverse proxy dns name 
-      - *Installs Nginx as **https** reverse proxy, Guacamole site set to* https://your-public-site.com
-      - *Nginx configured with a new LetsEncrypt certificate and http redirect*
-      - *Ongoing certbot certificate renewals scheduled* 
+- **Instalar o proxy reverso Nginx com um certificado Let's Encrypt?** [s/n]
+- Sim: solicita um e-mail do webmaster e um nome DNS do proxy reverso público
+- *Instala o Nginx como proxy reverso **https**, site Guacamole definido como* https://your-public-site.com
+- *Nginx configurado com um novo certificado LetsEncrypt e redirecionamento http*
+- *Renovações contínuas de certificados certbot agendadas*
 
-## **Post install hardening options**
+## **Opções de proteção pós-instalação**
 
-The installer additionally downloads the following manual configuration scripts:
-- `add-fail2ban.sh` - Adds a baseline fail2ban lockdown policy to Guacamole (& whitelists the local subnet)
-- `add-tls-guac-daemon.sh` - Adds a TLS wrapper to internal traffic between the Guacamole application and guacd server daemon
-- `add-auth-ldap.sh` - A template script for integrating Guacamole with Active Directory
-- `add-smtp-relay-o365.sh` - A template script for email alerts via MSO65 (SMTP auth via BYO app password)
+O instalador baixa adicionalmente os seguintes scripts de configuração manual:
+- `add-fail2ban.sh` - Adiciona uma política de bloqueio fail2ban de linha de base ao Guacamole (e coloca a sub-rede local na lista de permissões)
+- `add-tls-guac-daemon.sh` - Adiciona um wrapper TLS ao tráfego interno entre o aplicativo Guacamole e o daemon do servidor guacd
+- `add-auth-ldap.sh` - Um script de modelo para integração do Guacamole com o Active Directory
+- `add-smtp-relay-o365.sh` - Um script de modelo para alertas por e-mail via MSO65 (autenticação SMTP via senha do aplicativo BYO)
 
-## **Active Directory integration**
+## **Integração com o Active Directory**
 
-See Active Directory authentication instructions [here](https://github.com/itiligent/Guacamole-Install/blob/main/ACTIVE-DIRECTORY-HOW-TO.md)
+Consulte as instruções de autenticação do Active Directory [aqui](https://github.com/itiligent/Guacamole-Install/blob/main/ACTIVE-DIRECTORY-HOW-TO.md)
 
 
-## **Installation notes**
+## **Notas de instalação**
 
-The installer can be run interactively, or for a customised/unattended setup:
-1. From a terminal session, change to your home directory then paste and run the above wget autorun link.
-2. Exit the `1-setup.sh` script at the first prompt. (At this point only the scripts have downloaded).
-3. Customise the many installation variables in the "Silent setup options" section of `1-setup.sh` as appropriate. 
-    - *Script variables with a given value (e.g. `VARIABLE="value"`) will not prompt during the interactive setup. With the right combination of custom script variables, it is possible to deploy Guacamole appliance(s) with zero touch in only minutes.*
-4. **Beware: If any settings in `1-setup.sh` are edited, you must run this modified script locally. If you run the wget autorun link again you will overwrite all your changes!**
-      - *All install options are managed from within `1-setup.sh`. If you edit any of the other downloaded scripts, **you must also comment out each script's corresponding download link** within the "Download GitHub Setup" section of `1-setup.sh` to prevent re-download and overwrite when running setup.*
-      - *Some manual scripts are automatically customised at installation to reflect various install settings and options.*
-6. If the TLS self signed option is selected, client TLS certificates will be saved to `$DOWNLOAD_DIR/guac-setup`.
-7. Nginx is configured to only support TLS 1.2 or above.
+O instalador pode ser executado interativamente ou para uma configuração personalizada/autônoma:
+1. Em uma sessão de terminal, mude para seu diretório inicial, cole e execute o link wget autorun acima.
+2. Saia do script `1-setup.sh` no primeiro prompt. (Neste ponto, apenas os scripts foram baixados).
+3. Personalize as diversas variáveis de instalação na seção "Opções de configuração silenciosa" de `1-setup.sh` conforme apropriado.
+- *Variáveis de script com um determinado valor (por exemplo, `VARIABLE="value"`) não serão solicitadas durante a configuração interativa. Com a combinação certa de variáveis de script personalizadas, é possível implantar dispositivos Guacamole sem toque em apenas alguns minutos.*
+4. **Cuidado: Se alguma configuração em `1-setup.sh` for editada, você deverá executar este script modificado localmente. Se você executar o link de execução automática do wget novamente, você substituirá todas as suas alterações!**
+- *Todas as opções de instalação são gerenciadas em `1-setup.sh`. Se você editar qualquer um dos outros scripts baixados, **você também deve comentar o link de download correspondente de cada script** na seção "Baixar configuração do GitHub" de `1-setup.sh` para evitar novo download e substituição ao executar a configuração .*
+- *Alguns scripts manuais são personalizados automaticamente na instalação para refletir várias configurações e opções de instalação.*
+6. Se a opção TLS autoassinado for selecionada, os certificados TLS do cliente serão salvos em `$DOWNLOAD_DIR/guac-setup`.
+7. O Nginx está configurado para suportar apenas TLS 1.2 ou superior.
 
-## **Download manifest**
+## **Baixar manifesto**
 
-The autorun link above downloads the following items into the `$DOWNLOAD_DIR/guac-setup` directory:
+O link de execução automática acima baixa os seguintes itens no diretório `$DOWNLOAD_DIR/guac-setup`:
 
-- `1-setup.sh`: The parent install script itself (saved to the current directory)
-- `2-install-guacamole.sh`: Guacamole installation script (based on [MysticRyuujin/guac-install](https://github.com/MysticRyuujin/guac-install))
-- `3-install-nginx.sh`: Installs Nginx & auto-configures a front-end reverse proxy for Guacamole (optional)
-- `4a-install-tls-self-signed-nginx.sh`: Configures self-signed TLS certificate for Nginx proxy (optional)
-- `4b-install-tls-letsencrypt-nginx.sh`: Installs & configures Let's Encrypt for Nginx proxy (optional)
-- `add-auth-duo.sh`: Adds the Duo MFA extension if not selected during install (optional)
-- `add-auth-ldap.sh`: Adds the Active Directory extension and setup template if not selected at install (optional)
-- `add-auth-totp.sh`: Adds the TOTP MFA extension if not selected at install (optional)
-- `add-tls-guac-daemon.sh`: A hardening script to add a TLS wrapper between the guacd server daemon and Guacamole application traffic (optional, consider extra performance impact mitigations)
-- `add-fail2ban.sh`: Adds a fail2ban policy (with local subnet override) to secure Guacamole against external brute force attacks
-- `add-smtp-relay-o365.sh`: Sets up an SMTP auth relay with O365 for monitoring & alerts (BYO app password)
-- `backup-guacamole.sh`: A simple MySQL Guacamole backup script
-- `branding.jar`: An example template for a custom (dark mode!) Guacamole theme. Delete this file to keep the default Guacamole UI. This extension's source is also included for easier study and customisation.
+- `1-setup.sh`: O próprio script de instalação pai (salvo no diretório atual)
+- `2-install-guacamole.sh`: script de instalação do Guacamole (baseado em [MysticRyuujin/guac-install](https://github.com/MysticRyuujin/guac-install))
+- `3-install-nginx.sh`: instala o Nginx e configura automaticamente um proxy reverso front-end para Guacamole (opcional)
+- `4a-install-tls-self-signed-nginx.sh`: Configura certificado TLS autoassinado para proxy Nginx (opcional)
+- `4b-install-tls-letsencrypt-nginx.sh`: Instala e configura Let's Encrypt para proxy Nginx (opcional)
+- `add-auth-duo.sh`: Adiciona a extensão Duo MFA se não for selecionada durante a instalação (opcional)
+- `add-auth-ldap.sh`: Adiciona a extensão do Active Directory e o modelo de configuração se não for selecionado na instalação (opcional)
+- `add-auth-totp.sh`: Adiciona a extensão TOTP MFA se não for selecionada na instalação (opcional)
+- `add-tls-guac-daemon.sh`: Um script de proteção para adicionar um wrapper TLS entre o daemon do servidor guacd e o tráfego do aplicativo Guacamole (opcional, considere mitigações extras de impacto no desempenho)
+- `add-fail2ban.sh`: Adiciona uma política fail2ban (com substituição de sub-rede local) para proteger o Guacamole contra ataques externos de força bruta
+- `add-smtp-relay-o365.sh`: configura um relé de autenticação SMTP com O365 para monitoramento e alertas (senha do aplicativo BYO)
+- `backup-guacamole.sh`: Um script simples de backup MySQL Guacamole
+- `branding.jar`: Um modelo de exemplo para um tema Guacamole personalizado (modo escuro!). Exclua este arquivo para manter a IU padrão do Guacamole. A fonte desta extensão também está incluída para facilitar o estudo e a personalização.
